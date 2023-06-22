@@ -1,13 +1,13 @@
-#ifndef __MONTY_H__
-#define __MONTY_H__
+#ifndef MONTY_H
+#define MONTY_H
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
-#define STACK 0
-#define QUEUE 1
-#define DELIMS " \n\t\a\b"
+#define UNUSED(x) (void)(x)
+#define LINE_MAX 1024
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -26,7 +26,7 @@ typedef struct stack_s
 } stack_t;
 
 /**
- * struct instruction_s - opcode and its function
+ * struct instruction_s - opcoode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
  *
@@ -36,48 +36,29 @@ typedef struct stack_s
 typedef struct instruction_s
 {
 	char *opcode;
-	void (*f)(stack_t **stack, unsigned int line_number, char **op_toks);
+	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/* PRIMARY INTERPRETER FUNCTIONS */
-void free_stack(stack_t **stack);
-int init_stack(stack_t **stack);
-int check_mode(stack_t *stack);
-unsigned int token_arr_len(char **op_toks);
-int run_monty(FILE *script_fd);
-void set_op_tok_error(int error_code, char **op_toks);
-
-/* OPCODE FUNCTIONS */
-void monty_push(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_pall(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_pint(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_pop(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_swap(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_add(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_nop(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_sub(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_div(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_mul(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_mod(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_pchar(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_pstr(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_rotl(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_rotr(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_stack(stack_t **stack, unsigned int line_number, char **op_toks);
-void monty_queue(stack_t **stack, unsigned int line_number, char **op_toks);
-
-/* CUSTOM STANDARD LIBRARY FUNCTIONS */
-char **strtow_delim(char *str, char *delims);
-char *get_int(int n);
-
-/* ERROR MESSAGES & ERROR CODES */
-int malloc_error(void);
-int unknown_op_error(char *opcode, unsigned int line_number);
-int no_int_error(unsigned int line_number);
-int pop_error(unsigned int line_number);
-int pint_error(unsigned int line_number);
-int short_stack_error(unsigned int line_number, char *op);
-int div_error(unsigned int line_number);
-int pchar_error(unsigned int line_number, char *message);
-
-#endif /* __MONTY_H__ */
+extern int SQ;
+instruction_t *parse_line(char *line);
+void free_stack(stack_t *head);
+char *get_opcode(char *string);
+int is_int(char *str);
+void push(stack_t **stack, unsigned int line_number);
+void pall(stack_t **stack, unsigned int line_number);
+void pint(stack_t **stack, unsigned int line_number);
+void pop(stack_t **stack, unsigned int line_number);
+void swap(stack_t **stack, unsigned int line_number);
+void add(stack_t **stack, unsigned int line_number);
+void nop(stack_t **stack, unsigned int line_number);
+void sub(stack_t **stack, unsigned int line_number);
+void divide(stack_t **stack, unsigned int line_number);
+void multiply(stack_t **stack, unsigned int line_number);
+void moddy(stack_t **stack, unsigned int line_number);
+void pchar(stack_t **stack, unsigned int line_number);
+void pstr(stack_t **stack, unsigned int line_number);
+void rotl(stack_t **stack, unsigned int line_number);
+void rotr(stack_t **stack, unsigned int line_number);
+void stack(stack_t **stack, unsigned int line_number);
+void queue(stack_t **stack, unsigned int line_number);
+#endif
